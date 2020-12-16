@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyHolder;
-    [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private List<GameObject> _enemyPrefabs = new List<GameObject>();
     [SerializeField] private float _timeBetweenSpawns;
 
     [Header("Powerups")]
@@ -24,10 +25,11 @@ public class SpawnManager : MonoBehaviour
 
         while (!_stopSpawning)
         {
+            int randomEnemyIndex = Random.Range(0, _enemyPrefabs.Count);
             float randomX = Random.Range(-8f, 8f);
             Vector3 positionToSpawn = new Vector3(randomX, 7f, 0f);
 
-            GameObject newEnemy = Instantiate(_enemyPrefab, positionToSpawn, Quaternion.identity);
+            GameObject newEnemy = Instantiate(_enemyPrefabs[randomEnemyIndex], positionToSpawn, Quaternion.identity);
             newEnemy.transform.parent = _enemyHolder.transform;
 
             yield return new WaitForSeconds(_timeBetweenSpawns);

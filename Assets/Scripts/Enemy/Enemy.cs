@@ -2,20 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    //protected IShootBehaviour _shootBehaviour;
+
+    //TODO: Implement scriptableobject configs
+    [SerializeField] private EnemySO _enemyConfig;
     [SerializeField] private GameObject _laserPrefab;
     private Player _player;
     private Animator _animator;
     private AudioSource _audioSource;
-    private float _fireRate = 3.0f;
     private float _canFire = -1;
+    private float _speed;
+    private float _fireRate;
+
     private void Awake()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void Start()
+    {
+        _speed = _enemyConfig.speed;
+        _fireRate = _enemyConfig.fireRate;
     }
 
     void Update()
@@ -24,15 +35,20 @@ public class Enemy : MonoBehaviour
 
         if (Time.time > _canFire)
         {
-            _fireRate = Random.Range(3f, 7f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+            Fire();
+        }
+    }
 
-            for (int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
+    void Fire()
+    {
+        _fireRate = Random.Range(3f, 7f);
+        _canFire = Time.time + _fireRate;
+        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+        Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+        for (int i = 0; i < lasers.Length; i++)
+        {
+            lasers[i].AssignEnemyLaser();
         }
     }
 

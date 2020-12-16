@@ -287,6 +287,7 @@ MonoBehaviour:
   _projectilePrefab: {fileID: 7264450350265537318, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
   _tripleShotPrefab: {fileID: 638746093103704113, guid: 71084d2a467d11b4181bcd2555d8ff4d, type: 3}
   _fireRate: 0.2
+  _isFiring: 0
   _shieldVisualizer: {fileID: 1231857370}
   _leftEngineDestroyedVisualizer: {fileID: 1114056130}
   _rightEngineDestroyedVisualizer: {fileID: 2012641043}
@@ -592,7 +593,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyHolder: {fileID: 2146709718}
-  _enemyPrefab: {fileID: 8401535851029465136, guid: da16fc2a87a243541a88dccdf065872d, type: 3}
+  _enemyPrefabs:
+  - {fileID: 8401535851029465136, guid: da16fc2a87a243541a88dccdf065872d, type: 3}
+  - {fileID: 8401535851029465136, guid: 1d891b6ef26bad0449f535530da99910, type: 3}
   _timeBetweenSpawns: 5
   _powerup:
   - {fileID: 7392982938722812707, guid: 806689170eebb9d4e8855ba0273c64da, type: 3}

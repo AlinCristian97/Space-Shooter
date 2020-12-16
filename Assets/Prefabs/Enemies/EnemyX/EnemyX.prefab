@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 4850551725327213826}
   - component: {fileID: 7609794465963223850}
   - component: {fileID: 6289431730634203246}
-  - component: {fileID: 1904444146020445620}
   - component: {fileID: 5427694758581407295}
   - component: {fileID: -1509363148815577590}
+  - component: {fileID: 1180244722057765644}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemyX
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3154912113cbb4a498df6f571c74e18c, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.28034887, g: 0.9433962, b: 0.42569304, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -134,20 +134,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.9657645, y: 1.8931166}
   m_EdgeRadius: 0
---- !u!114 &1904444146020445620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8401535851029465136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c37e9991341f7cc4a89180174b772fcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _speed: 4
-  _laserPrefab: {fileID: 6523125005701932025, guid: c6c03f59274bbed42b4857687bb9b03a, type: 3}
 --- !u!95 &5427694758581407295
 Animator:
   serializedVersion: 3
@@ -263,3 +249,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1180244722057765644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8401535851029465136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c9c8f39bfdef344eaef9a36e9387553, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyConfig: {fileID: 11400000, guid: 08c0426d5414619468ede8fb568a59c5, type: 2}
+  _laserPrefab: {fileID: 6523125005701932025, guid: c6c03f59274bbed42b4857687bb9b03a, type: 3}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6523125005701932026}
   m_Layer: 0
-  m_Name: EnemyLaser
+  m_Name: EnemyX_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,6 +87,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8207547
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.b
+      value: 0.21933442
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
 --- !u!4 &4491857648225667251 stripped
@@ -148,6 +160,18 @@ PrefabInstance:
     - target: {fileID: 7264450350265537370, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.g
+      value: 0.8207547
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264450350265537371, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
+      propertyPath: m_Color.b
+      value: 0.21933442
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
