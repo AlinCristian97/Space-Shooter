@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private float _fireRate;
     private float _canFire = -1f;
+    [SerializeField] private bool _isFiring;
     private SpawnManager _spawnManager;
     private float _speedMultiplier = 2;
     private bool _isSpeedBoostActive;
@@ -39,7 +41,12 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0, -2, 0);
         _audioSource.clip = _laserSoundClip;
 
-        _playerInputActions.Gameplay.Fire.performed += x => FireProjectile();
+        _playerInputActions.Gameplay.Fire.started += _ =>
+        {
+            _isFiring = true;
+            StartCoroutine(FireProjectile());
+        };
+        _playerInputActions.Gameplay.Fire.canceled += _ => _isFiring = false;
         _playerInputActions.Gameplay.Move.performed += context => _inputMovement = context.ReadValue<Vector2>();
     }
 
@@ -56,6 +63,16 @@ public class Player : MonoBehaviour
     private void Update()
     {
         HandleMovement();
+
+        CheckIfFiring();
+    }
+
+    private void CheckIfFiring()
+    {
+        if (Mouse.current.leftButton.isPressed || Keyboard.current[Key.Space].isPressed) //this is bullcrap workaround.
+        {
+            _isFiring = true;
+        }
     }
 
     private void HandleMovement()
@@ -85,25 +102,30 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void FireProjectile()
+    private IEnumerator FireProjectile()
     {
         Vector3 spawnOffset = new Vector3(0, 0.75f, 0);
+        Debug.Log("Started Coroutine.");
 
-        if (Time.time > _canFire)
+        while (_isFiring)
         {
-            _canFire = Time.time + _fireRate;
-
-            if (_isTripleShotActive)
+            if (Time.time > _canFire)
             {
-                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+                _canFire = Time.time + _fireRate;
 
-            }
-            else if (!_isTripleShotActive)
-            {
-                Instantiate(_projectilePrefab, transform.position + spawnOffset, Quaternion.identity);
-            }
+                if (_isTripleShotActive)
+                {
+                    Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
 
-            _audioSource.Play();
+                }
+                else if (!_isTripleShotActive)
+                {
+                    Instantiate(_projectilePrefab, transform.position + spawnOffset, Quaternion.identity);
+                }
+
+                _audioSource.Play();
+            }
+            yield return new WaitForSeconds(_fireRate);
         }
     }
 

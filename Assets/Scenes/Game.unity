@@ -286,7 +286,7 @@ MonoBehaviour:
   _speed: 16
   _projectilePrefab: {fileID: 7264450350265537318, guid: 7d5bbfdb394c02c45a04463ec5617d92, type: 3}
   _tripleShotPrefab: {fileID: 638746093103704113, guid: 71084d2a467d11b4181bcd2555d8ff4d, type: 3}
-  _fireRate: 0.1
+  _fireRate: 0.2
   _shieldVisualizer: {fileID: 1231857370}
   _leftEngineDestroyedVisualizer: {fileID: 1114056130}
   _rightEngineDestroyedVisualizer: {fileID: 2012641043}
