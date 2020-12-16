@@ -7,15 +7,15 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_isGameOver && Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(1); // Game Scene
-        }
+        //if (_isGameOver && Input.GetKeyDown(KeyCode.R))
+        //{
+        //    SceneManager.LoadScene(1); // Game Scene
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    Application.Quit();
+        //}
     }
 
     public void GameOver()

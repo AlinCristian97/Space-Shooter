@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private PlayerInputActions _playerInputActions;
+    private Vector2 _inputMovement;
+
     [SerializeField] private int _lives;
     [SerializeField] private float _speed;
 
@@ -28,31 +31,36 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        _playerInputActions = new PlayerInputActions();
     }
 
     private void Start()
     {
         transform.position = new Vector3(0, -2, 0);
         _audioSource.clip = _laserSoundClip;
+
+        _playerInputActions.Gameplay.Fire.performed += x => FireProjectile();
+        _playerInputActions.Gameplay.Move.performed += context => _inputMovement = context.ReadValue<Vector2>();
+    }
+
+    private void OnEnable()
+    {
+        _playerInputActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerInputActions.Disable();
     }
 
     private void Update()
     {
         HandleMovement();
-
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
-        {
-            FireProjectile();
-        }
     }
 
     private void HandleMovement()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
-
-        transform.Translate(direction * _speed * Time.deltaTime);
+        transform.Translate(_inputMovement * _speed * Time.deltaTime);
 
         MovementConstraints();
     }
@@ -81,19 +89,22 @@ public class Player : MonoBehaviour
     {
         Vector3 spawnOffset = new Vector3(0, 0.75f, 0);
 
-        _canFire = Time.time + _fireRate;
-
-        if (_isTripleShotActive)
+        if (Time.time > _canFire)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            _canFire = Time.time + _fireRate;
 
-        }
-        else if (!_isTripleShotActive)
-        {
-            Instantiate(_projectilePrefab, transform.position + spawnOffset, Quaternion.identity);
-        }
+            if (_isTripleShotActive)
+            {
+                Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
 
-        _audioSource.Play();
+            }
+            else if (!_isTripleShotActive)
+            {
+                Instantiate(_projectilePrefab, transform.position + spawnOffset, Quaternion.identity);
+            }
+
+            _audioSource.Play();
+        }
     }
 
     public void TakeDamage()
