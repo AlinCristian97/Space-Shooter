@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour, IObserver
 {
+    private ISubject _player;
+
     [SerializeField] private GameObject _enemyHolder;
     [SerializeField] private List<GameObject> _enemyPrefabs = new List<GameObject>();
     [SerializeField] private float _timeBetweenSpawns;
@@ -11,6 +13,20 @@ public class SpawnManager : MonoBehaviour
     [Header("Powerups")]
     [SerializeField] private GameObject[] _powerup;
     private bool _stopSpawning;
+
+    public void GetNotified()
+    {
+        if ((_player as Player).IsAlive == false)
+        {
+            StopSpawiningOnPlayerDeath();
+        }
+    }
+
+    private void Awake()
+    {
+        _player = FindObjectOfType<Player>();
+        _player.AddObserver(this);
+    }
 
     public void StartSpawning()
     {
@@ -54,7 +70,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public void OnPlayerDeath()
+    public void StopSpawiningOnPlayerDeath()
     {
         _stopSpawning = true;
     }

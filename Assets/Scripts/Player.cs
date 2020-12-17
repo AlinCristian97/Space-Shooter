@@ -1,58 +1,89 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISubject
 {
-    private PlayerInputActions _playerInputActions;
-    private Vector2 _inputMovement;
+    private List<IObserver> _observers = new List<IObserver>();
+    [SerializeField] private InputReader _inputReader;
 
     [SerializeField] private int _lives;
     [SerializeField] private float _speed;
+    private PlayerInputActions _playerInputActions;
+    private Vector2 _inputMovement;
 
-    [Header("Firing Variables")]
+    public bool IsAlive { get => Lives > 0; }
+
+    [Header("Shooting Variables")]
     [SerializeField] private GameObject _projectilePrefab;
-    [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private float _fireRate;
     private float _canFire = -1f;
-    [SerializeField] private bool _isFiring;
-    private SpawnManager _spawnManager;
+    private bool _isFiring;
+
+    [Header("Powerups")]
+    [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField] private GameObject _leftEngineDestroyedVisualizer, _rightEngineDestroyedVisualizer;
     private float _speedMultiplier = 2;
     private bool _isSpeedBoostActive;
     private bool _isTripleShotActive;
     private bool _isShieldActive;
-    [SerializeField] private GameObject _shieldVisualizer;
-    [SerializeField] private GameObject _leftEngineDestroyedVisualizer, _rightEngineDestroyedVisualizer;
+
     [SerializeField] private int _score;
-    private UIManager _uiManager;
+
+    [Header("Audio")]
     [SerializeField] private AudioClip _laserSoundClip;
     private AudioSource _audioSource;
 
+    public int Score { get => _score; private set => _score = value; }
+    public int Lives { get => _lives; private set => _lives = value; }
+
+    public void AddObserver(IObserver observer)
+    {
+        _observers.Add(observer);
+    }
+
+    public void RemoveObserver(IObserver observer)
+    {
+        if (_observers.Contains(observer))
+        {
+            _observers.Remove(observer);
+        }
+    }
+
+    public void NotifyObservers()
+    {
+        if (_observers.Count > 0)
+        {
+            foreach (IObserver observer in _observers)
+            {
+                observer.GetNotified();
+            }
+        }
+    }
+
     private void Awake()
     {
-        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        _uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         _playerInputActions = new PlayerInputActions();
     }
 
+
     private void Start()
     {
         transform.position = new Vector3(0, -2, 0);
-        _audioSource.clip = _laserSoundClip;
-
-        _playerInputActions.Gameplay.Fire.started += _ =>
-        {
-            _isFiring = true;
-            StartCoroutine(FireProjectile());
-        };
-        _playerInputActions.Gameplay.Fire.canceled += _ => _isFiring = false;
-        _playerInputActions.Gameplay.Move.performed += context => _inputMovement = context.ReadValue<Vector2>();
+        _audioSource.clip = _laserSoundClip;        
     }
 
     private void OnEnable()
     {
         _playerInputActions.Enable();
+        _inputReader.attackEvent += OnAttack;
+        _inputReader.attackCanceledEvent += OnAttackCanceled;
+        _inputReader.moveEvent += OnMove;
+
+        //TODO: Restart level
     }
 
     private void OnDisable()
@@ -138,22 +169,21 @@ public class Player : MonoBehaviour
             return;
         }
 
-        _lives--;
+        Lives--;
 
-        if (_lives == 2)
+        if (Lives == 2)
         {
             _leftEngineDestroyedVisualizer.SetActive(true);
         }
-        else if (_lives == 1)
+        else if (Lives == 1)
         {
             _rightEngineDestroyedVisualizer.SetActive(true);
         }
 
-        _uiManager.UpdateLives(_lives);
+        NotifyObservers();
 
-        if (_lives < 1)
+        if (!IsAlive)
         {
-            _spawnManager.OnPlayerDeath();
             Destroy(gameObject);
         }
     }
@@ -196,7 +226,25 @@ public class Player : MonoBehaviour
 
     public void AddScore(int points)
     {
-        _score += points;
-        _uiManager.UpdateScore(_score);
+        Score += points;
+        NotifyObservers();
+    }
+
+
+    //Event Listeners
+    public void OnAttack()
+    {
+        _isFiring = true;
+        StartCoroutine(FireProjectile());
+    }
+
+    public void OnAttackCanceled()
+    {
+        _isFiring = false;
+    }
+
+    private void OnMove(Vector2 movement)
+    {
+        _inputMovement = movement;
     }
 }
